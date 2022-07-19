@@ -33,7 +33,7 @@
     border-bottom: 8px solid #eee;
   }
   .recommend-item{
-    flex: 1;
+    flex: 2;
   }
   .recommend-item img{
     width: 70px;
