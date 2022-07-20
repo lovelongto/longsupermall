@@ -25,10 +25,12 @@
 
 <style scoped>
  .goods{
+   /*容器弹性布局*/
    display: flex;
+   /*弹性布局必要时是否换行*/
    flex-wrap: wrap;
-   justify-content: space-around;
-   padding: 2px;
+   /*justify-content: space-around; 周围的空间一样，evenly均匀的*/
+   justify-content: space-evenly;
  }
 
 </style>
