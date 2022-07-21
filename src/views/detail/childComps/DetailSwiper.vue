@@ -1,7 +1,7 @@
 <template>
     <swiper class="detail-swiper">
-      <swiper-item  v-for="item in topImages">
-        <img :src="item" alt="" @load="swiper">
+      <swiper-item  v-for="(item,index) in topImages">
+        <img :src="item" alt="" @load="swiper(index,topImages)">
       </swiper-item>
     </swiper>
 </template>
@@ -23,9 +23,11 @@
       }
     },
     methods:{
-      swiper(){
-        console.log('图片加载完成');
-        this.$bus.$emit('swiperimageload')
+      swiper(index,topImages){
+        if(index===topImages.length-1){
+          console.log(topImages.length - 1);
+          this.$bus.$emit('swiperimageload')
+        }
       }
     }
   }
