@@ -25,7 +25,7 @@
     methods:{
       swiper(index,topImages){
         if(index===topImages.length-1){
-          console.log(topImages.length - 1);
+          // console.log(topImages.length - 1);
           this.$bus.$emit('swiperimageload')
         }
       }

@@ -63,7 +63,8 @@
        isShowBackTop:false,
        tabOffsetTop:0,
        isTabFixed:false,
-       saveY:0
+       saveY:0,
+       itemImgListener: null
      }
     },
     computed:{
@@ -79,7 +80,11 @@
       this.$refs.scroll.refresh()
     },
     deactivated(){
+      //保存Y值
       this.saveY=this.$refs.scroll.getScrollY()
+
+      //2.取消全局事件的监听
+      this.$bus.$off('itemImaLoad',this.itemImgListener)
     },
     created() {
       //1.请求多个数据
@@ -91,12 +96,13 @@
       this.getHomeGoods('sell')
     },
     mounted(){
+
       const refresh=debounce(this.$refs.scroll.refresh,50)
+      this.itemImgListener=()=>{
+        refresh();
+      }
       //1.监听item中图片加载完成
-      this.$bus.$on('itemImageLoad',()=>{
-        // this.$refs.scroll.refresh()
-        refresh()
-      })
+      this.$bus.$on('itemImageLoad',this.itemImgListener)
     },
     methods:{
       //事件监听的相关方法

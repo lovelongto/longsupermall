@@ -1,6 +1,9 @@
 <template>
-  <div class="goods-item">
-    <img :src="goodsItem.show.img" alt="" @load="imageLoad" @click="itemClick">
+  <div class="goods-item" @click="itemClick">
+    <!--<img :src="goodsItem.show.img" alt="" @load="imageLoad" @click="itemClick">-->
+    <img :src="shouImage" alt="" @load="imageLoad" @click="itemClick">
+    <!--<img v-lazy="shouImage"  alt="" @load="imageLoad" >-->
+    <!--<img v-lazy="shouImage" alt="" @load="imageLoad">-->
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -20,16 +23,25 @@
         } 
       }
     },
+    computed:{
+      shouImage() {
+        return this.goodsItem.image || this.goodsItem.show.img
+      }
+    },
     methods:{
       imageLoad(){
-        this.$bus.$emit('itemImageLoad') //发射到事件总线
+        this.$bus.$emit('itemImageLoad')
+        // if(this.$route.path.indexOf('/hone')){
+        //   this.$bus.$emit('homeitemImageLoad') //发射到事件总线
+        // }else if(this.$route.path.indexOf('/detail')){
+        //   this.$bus.$emit('detailitemImageLoad') //发射到事件总线
+        // }
       },
       itemClick(){
         this.$router.push('/detail/'+this.goodsItem.iid)
         // this.$router.push({  //jquery的方式
         //   path:'/detail',
         //   query:{
-        //
         //   }
         // })
       }
