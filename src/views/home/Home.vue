@@ -36,6 +36,7 @@
 
   import {getHomeMultidata, getHomeGoods,} from "network/home";
   import  {debounce} from "common/utils";
+  import  {itemListenerMixin} from "common/mixin";
 
   export default {
     name: "Home",
@@ -49,6 +50,7 @@
       Scroll,
       BackTop
     },
+    mixins:[itemListenerMixin],
     data(){
      return{
        // result:null,
@@ -64,7 +66,6 @@
        tabOffsetTop:0,
        isTabFixed:false,
        saveY:0,
-       itemImgListener: null
      }
     },
     computed:{
@@ -95,14 +96,7 @@
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
     },
-    mounted(){
-
-      const refresh=debounce(this.$refs.scroll.refresh,50)
-      this.itemImgListener=()=>{
-        refresh();
-      }
-      //1.监听item中图片加载完成
-      this.$bus.$on('itemImageLoad',this.itemImgListener)
+    mounted(){     // console.log('在mixin中');
     },
     methods:{
       //事件监听的相关方法

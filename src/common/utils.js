@@ -38,7 +38,7 @@ function padLeftZero(str) {
   return ("00" + str).substr(str.length);  //截掉前面一个0，意思就是str加个0，很巧妙的算法
 }
 
-export function debounce(func,delay){
+export function debounce(func,delay=50){
   let timer=null
   return function (...args) {
     if(timer) clearTimeout(timer) //如果来得特别频繁，就取消掉

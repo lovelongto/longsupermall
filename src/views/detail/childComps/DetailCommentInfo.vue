@@ -45,10 +45,9 @@ export default {
       // console.log(new Date(1658478934 * 1000).toDateString());
       // 1.将时间戳转成Date对象
       let date = new Date(value * 1000);
+      // console.log(date);
       // 2.将date进行格式化
       return formatDate(date, "yyyy-MM-dd mm:hh:ss");
-
-
     }
   }
 };

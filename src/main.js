@@ -9,3 +9,14 @@ new Vue({
   render: h => h(App),
   router,
 }).$mount('#app')
+
+class Animal{
+  run(){
+
+  }
+}
+class Person extends Animal{
+  run(){
+
+  }
+}

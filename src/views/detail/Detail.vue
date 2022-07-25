@@ -1,14 +1,17 @@
 <template>
   <div id="detail">
-     <detail-nav-bar class="detail-nav-bar"/>
-    <scroll class="content" ref="scroll">
+     <detail-nav-bar class="detail-nav-bar" @titleClick="titleClick" ref="nav"/>
+    <scroll class="content" ref="scroll"
+            :probe-type="3"
+            @scroll="contentScroll">
+      <!--属性：topImages 传入值：top-images-->
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
       <detail-shop-info :shop="shop"/>
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"/>
-      <detail-params :param-info="paramInfo"></detail-params>
-      <detail-comment-info :comment-info="commentInfo"/>
-      <goods-list :goods="recommend"/>
+      <detail-params ref="params" :param-info="paramInfo"></detail-params>
+      <detail-comment-info ref="comment" :comment-info="commentInfo"/>
+      <goods-list ref="recommend" :goods="recommend"/>
     </scroll>
     <!--<div v-for="n in 10">{{n}}</div> n遍历是从1开始的-->
   </div>
@@ -28,6 +31,8 @@
 
   import  {getDetail,Goods,Shop,GoodsParam,getRecommend} from 'network/detail'
   import {debounce} from "common/utils";
+  import {itemListenerMixin} from "common/mixin";
+
   export default {
     name: "Detail",
     components:{
@@ -41,6 +46,7 @@
       DetailCommentInfo,
       GoodsList
     },
+    mixins:[itemListenerMixin],
     data(){
       return {
         iid:null,
@@ -51,7 +57,9 @@
         paramInfo:{},
         commentInfo:{},
         recommend:[],
-        itemImgListener:null
+        themeTopYs:[],
+        getThemeTopY:null,
+        currentIndex:0
       }
     },
     created() {
@@ -61,7 +69,7 @@
       //2.根据iid请求详情数据
       getDetail(this.iid).then(res=>{
         //获取轮播图数据
-        console.log(res);
+        // console.log(res);
         const data=res.result;
         this.topImages=res.result.itemInfo.topImages;
 
@@ -83,28 +91,75 @@
         }
       })
 
+      /*
+           DOM没有渲染
+           this.themeTopYs.push(0)
+           this.themeTopYs.push(-this.$refs.params.$el.offsetTop)
+           this.themeTopYs.push(-this.$refs.comment.$el.offsetTop)
+           this.themeTopYs.push(-this.$refs.recommend.$el.offsetTop)
+           console.log(this.themeTopYs);*/
+      this.$nextTick(() => {
+        /* DOM已经渲染完成， 图片没有加载完成
+            this.themeTopYs = []
+            this.themeTopYs.push(0)
+            this.themeTopYs.push(-this.$refs.params.$el.offsetTop)
+            this.themeTopYs.push(-this.$refs.comment.$el.offsetTop)
+            this.themeTopYs.push(-this.$refs.recommend.$el.offsetTop)
+            console.log(this.themeTopYs);*/
+      })
+
+
       //请求推荐栏的信息
       getRecommend().then(res=>{
         this.recommend=res.data.list
       })
+
+      //4.给getThemeTopY赋值 给函数赋值进行防抖
+      this.getThemeTopY=debounce(()=>{
+        this.themeTopYs=[]
+        this.themeTopYs.push(0);
+        this.themeTopYs.push(this.$refs.params.$el.offsetTop)
+        this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
+        this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
+        // console.log(this.themeTopYs);
+      },100)
+
     },
     mounted(){
-      const refresh=debounce(this.$refs.scroll.refresh,50)
-      this.itemImgListener=()=>{
-        refresh();
-      }
-      //1.监听item中图片加载完成
-      this.$bus.$on('itemImageLoad',this.itemImgListener)
+      // console.log('在mixin中');
     },
     methods:{
       imageLoad(){
-        this.$refs.scroll.refresh()
+        // this.$refs.scroll.refresh()
+        this.refresh()
+        this.getThemeTopY();
+      },
+      titleClick(index){
+        // console.log(index);
+        this.$refs.scroll.scrollTo(0,-this.themeTopYs[index],200)
+      },
+      contentScroll(position){
+        //1.获取y值
+        const positionY=-position.y;
+
+        //2.positionY和题中的值进行对比
+        let lenght=this.themeTopYs.length;
+        for(let i= 0;i<lenght;i++){
+          // if(positionY>this.themeTopYs[i]&&positionY<this.themeTopYs[i+1]){
+          //   console.log(i);
+          // }
+          if(this.currentIndex!==i&&((i<lenght-1&&positionY>=this.themeTopYs[i]
+            &&positionY<this.themeTopYs[i+1])||(i===lenght-1&&positionY>=this
+            .themeTopYs[i]))){
+            this.currentIndex=i;
+            this.$refs.nav.currentIndex=this.currentIndex;
+          }
+        }
       }
     },
     destroyed() {
       this.$bus.$off('itemImaLoad',this.itemImgListener)
     }
-
   }
 </script>
 
