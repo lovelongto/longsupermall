@@ -18,7 +18,7 @@
     </scroll>
     <BackTop @click.native="backClick" v-show="isShowBackTop"/>
     <detail-bottom-bar @addCart="addToCart"/>
-
+    <!--<toast :message="message" :show="show"/>-->
     <!--<div v-for="n in 10">{{n}}</div> n遍历是从1开始的-->
   </div>
 </template>
@@ -36,6 +36,7 @@
 
   import  Scroll from  'components/common/scroll/Scroll'
   import  GoodsList from  'components/content/goods/GoodsList'
+  // import  Toast from  'components/common/toast/Toast'
 
   import  {getDetail,Goods,Shop,GoodsParam,getRecommend} from 'network/detail'
   import {debounce} from "common/utils";
@@ -55,6 +56,7 @@
       DetailCommentInfo,
       GoodsList,
       DetailBottomBar,
+      // Toast
     },
     mixins:[itemListenerMixin,backTopmixin],
     data(){
@@ -70,6 +72,8 @@
         themeTopYs:[],
         getThemeTopY:null,
         currentIndex:0,
+        // message:'',
+        // show:false
       }
     },
     created() {
@@ -189,7 +193,15 @@
         // this.$store.cartList.push(product)  //不要这样，要通过mutation
         // this.$store.commit('addCart',product)
         this.addCart(product).then(res=>{
+          // this.show=true
+          // this.message=res;
+          //
+          // setTimeout(()=>{
+          //   this.show=false;
+          //   this.message=''
+          // },1500)
           console.log(res);
+          this.$toast.show(res)
         })
         // this.$store.dispatch('addCart',product).then(res=>{
         //   console.log(res);
