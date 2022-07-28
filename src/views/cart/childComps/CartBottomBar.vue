@@ -59,7 +59,7 @@
       },
       calcClick(){
         if(!this.isSelectAll){
-          this.$toast.show('请选择购买的商品',2000)
+          this.$toast.show('long提示您：请选择购买的商品',2000)
         }
       }
     }

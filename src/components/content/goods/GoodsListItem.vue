@@ -1,7 +1,8 @@
 <template>
   <div class="goods-item" @click="itemClick">
     <!--<img :src="goodsItem.show.img" alt="" @load="imageLoad" @click="itemClick">-->
-    <img :src="shouImage" alt="" @load="imageLoad" @click="itemClick">
+    <!--<img :src="shouImage" alt="" @load="imageLoad" @click="itemClick">-->
+    <img v-lazy="shouImage" alt="" @load="imageLoad" @click="itemClick">
     <!--<img v-lazy="shouImage"  alt="" @load="imageLoad" >-->
     <!--<img v-lazy="shouImage" alt="" @load="imageLoad">-->
     <div class="goods-info">

@@ -11,7 +11,9 @@
     "better-scroll": "^1.13.2",
     "core-js": "^3.8.3",
     "fastclick": "^1.0.6",
+    "postcss-px-to-viewport": "^1.1.1",
     "vue": "^2.6.14",
+    "vue-lazyload": "^1.2.6",
     "vue-router": "^3.0.2",
     "vuex": "^3.1.0"
   },
